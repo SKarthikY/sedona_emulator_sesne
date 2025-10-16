@@ -1,0 +1,18 @@
+[project]
+name = "daep"
+version = "0.0.1"
+dependencies = []
+description = "NN based sedona emulator"
+authors = [
+    {name="Karthik Yadavalli", email = "yadavallikarthik99@gmail.com"},
+    {name="Yunyi Shen", email="yshen99@mit.edu"}
+    
+]
+license = { text = "MIT" }
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["sedoNNa"]
