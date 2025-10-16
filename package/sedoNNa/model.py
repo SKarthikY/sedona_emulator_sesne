@@ -26,7 +26,7 @@ class SinusoidalMLPPositionalEmbedding(nn.Module):
 
 class FluxTransformerDecoder(nn.Module):
     def __init__(self, n_physical_param=10, n_wavelength=602,
-                 d_model=128, nhead=8, num_layers=4, learnedPE=False):
+                 d_model=128, nhead=8, num_layers=4, learnedPE=True):
         super().__init__()
         self.d_model = d_model
         self.seq_len = n_wavelength

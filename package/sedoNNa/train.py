@@ -36,4 +36,4 @@ def train_model(model, dataloader,
         training_losses.append(epoch_loss)
         
     model.eval()
-    return model
+    return model, training_losses
