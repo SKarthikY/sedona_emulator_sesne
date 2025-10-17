@@ -18,10 +18,11 @@ def train(d_model=128, nhead=8, num_layers=4,
           epochs = 100
           ):
     
+    print(f"dim{d_model}_nhead{nhead}_numlayers{num_layers}_learnedPE{learnedPE}_lr{lr}_weightdecay{weight_decay}_batchsize{batch_size}_epochs{epochs}")
     
     
     
-    all_data = torch.load("../data/preprocessed_small_spectra.pt", weights_only = False)
+    all_data = torch.load("/n/netscratch/avillar_lab/Everyone/karthik/NeuralNetworks/COperation/PredictingRawFluxes/preprocessed_spectra.pt", weights_only = False)
     all_sample_ids = sorted({entry['sample_id'] for entry in all_data})
 
     train_sample_ids = all_sample_ids

@@ -1,4 +1,5 @@
 import torch
+from tqdm import tqdm
 
 
 def train_model(model, dataloader, 
@@ -10,7 +11,7 @@ def train_model(model, dataloader,
     training_losses = []
     for epoch in range(epochs):
         running_loss = 0.0
-        for i, batch in enumerate(dataloader):
+        for i, batch in tqdm(enumerate(dataloader)):
             # Only print occasionally for progress
             descriptor = batch['descriptor'].float().to(device)
             time = batch['time'].unsqueeze(1).float().to(device)

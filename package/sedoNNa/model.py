@@ -2,6 +2,8 @@ import torch.nn as nn
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from .util_layers import TransformerDecoderLayer, TransformerDecoder
+
 
 
 class SinusoidalMLPPositionalEmbedding(nn.Module):
@@ -12,8 +14,8 @@ class SinusoidalMLPPositionalEmbedding(nn.Module):
         super().__init__()
         self.dim = dim
         self.div_term = torch.exp(torch.arange(0, dim).float() * (-torch.log(torch.tensor(10000.0)) / dim))
-        self.fc1 = nn.Linear(2 * dim, dim)
-        self.fc2 = nn.Linear(dim, dim)
+        self.fc1 = nn.Linear(2 * dim, 2 * dim)
+        self.fc2 = nn.Linear(2 * dim, dim)
     def forward(self, x):
         # x: [B, seq_len]
         sine = torch.sin(x[:, :, None] * self.div_term[None, None, :].to(x.device))
@@ -22,6 +24,9 @@ class SinusoidalMLPPositionalEmbedding(nn.Module):
         encoding = F.relu(self.fc1(encoding))
         encoding = self.fc2(encoding)
         return encoding
+
+
+
 
 
 class FluxTransformerDecoder(nn.Module):
@@ -47,17 +52,14 @@ class FluxTransformerDecoder(nn.Module):
             grid = torch.linspace(0, 1, steps=n_wavelength)[None, :]
             self.register_buffer("grid", grid)
         # Transformer decoder layers
-        decoder_layer = nn.TransformerDecoderLayer(
+        decoderLayers = [TransformerDecoderLayer(
             d_model=d_model,
             nhead=nhead,
-            batch_first=True,
-            norm_first=True  # pre-layernorm
-        )
-        self.decoder = nn.TransformerDecoder(
-            decoder_layer,
-            num_layers=num_layers,
-            norm=nn.LayerNorm(d_model)  # post-norm after final layer
-        )
+            dim_feedforward = 2 * d_model
+        ) for _ in range(num_layers)]
+        
+        self.decoder = TransformerDecoder(decoderLayers)
+        
         # Output projection
         self.output_proj = nn.Linear(d_model, 1)
         
